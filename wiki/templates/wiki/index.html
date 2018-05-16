@@ -1,0 +1,27 @@
+{% extends 'wiki/base.html' %}
+
+{% block title %}<title>Index</title>{% endblock title %}
+
+{% block login %}
+
+    {% if not auth %}
+        <nav><a href="{% url 'wiki:login' %}" class="btn btn-primary m-2">Login</a></nav>
+    {% else %}
+        <nav><a href="{% url 'wiki:logout' %}" class="btn btn-danger m-2">Logout</a></nav>
+    {% endif %}
+
+{% endblock login %}
+
+{% block content %}
+
+    {% if pages %}
+        {% for page in pages %}
+            <li class="list-group-item"><a href="{% url 'wiki:pageview' page.page_name %}">
+                {{ page.page_name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No pages are available.</p>
+    {% endif %}
+
+{% endblock content %}

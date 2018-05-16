@@ -1,0 +1,22 @@
+{% extends 'wiki/base.html' %}
+{% load wiki_tags %}
+
+{% block title %}<title>{{ this_page.page_name }}</title>{% endblock title %}
+
+{% block login %}
+
+    {% if not auth %}
+        <nav><a href="{% url 'wiki:login' %}" class="btn btn-primary m-2">Login</a></nav>
+    {% else %}
+        <nav><a href="{% url 'wiki:logout' %}" class="btn btn-danger m-2">Logout</a></nav>
+    {% endif %}
+
+{% endblock login %}
+
+{% block content %}
+
+    {{ this_page.page_content|wikify|safe }}
+
+    <a class="btn btn-primary" href="{% url 'wiki:edit' pk=this_page.page_name %}">Edit Page</a>
+
+{% endblock content %}

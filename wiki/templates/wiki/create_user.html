@@ -1,0 +1,28 @@
+{% extends 'wiki/base.html' %}
+
+{% block title %}<title>Create User</title>{% endblock title %}
+
+{% block content %}
+
+    {% if form.errors %}
+        <p>There was an error on the form. Please try again.</p>
+    {% endif %}
+    <form class="form-registration" method="post" action="{% url 'wiki:register' %}">
+        {% csrf_token %}
+
+        {{ form }}
+
+        <button class="btn btn-danger" type="submit">Create User</button>
+    </form>
+
+{% endblock content %}
+
+{% block login %}
+
+    {% if not auth %}
+        <nav><a href="{% url 'wiki:login' %}" class="btn btn-primary m-2">Login</a></nav>
+    {% else %}
+        <nav><a href="{% url 'wiki:logout' %}" class="btn btn-danger m-2">Logout</a></nav>
+    {% endif %}
+
+{% endblock login %}
