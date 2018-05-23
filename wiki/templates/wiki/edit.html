@@ -1,24 +1,29 @@
+<!-- Extends the base template -->
 {% extends 'wiki/base.html' %}
-
+<!-- Overrides the base pageCustom block to include the tinyMCE rich text editor -->
 {% block pageCustom %}
     <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
 {% endblock pageCustom %}
-
+<!-- Overrides the base title block with the title of the page being edited -->
 {% block title %}<title>Editing {{ page.page_name }}</title>{% endblock title %}
-
+<!-- Overrides the content block with a form that displays the content of the page being edited and allows editing of its content -->
 {% block content %}
-
+    <!-- Header for reminding the user which page is being edited -->
     <h1> Editing {{ page.page_name }} </h1>
 
-    <form name="editform" method="post" action="{% url 'wiki:edit' page.page_name %}">
+    <form method="post" action="{% url 'wiki:edit' page.page_name %}">
+        <!-- Required CSRF token for security purposes -->
         {% csrf_token %}
-
-        <div id="pagecontent">{{ page.page_content|safe }}</div>
-
+        <!-- Displays the content of the page being edited and uses the 'safe' tag to allow displaying of HTML -->
+        <div name="pagecontent" id="pagecontent">{{ page.page_content|safe }}</div>
+        <!-- Cancel and save buttons for cancelling/saving edits -->
         <button type="submit" name="Cancel" value="Cancel">Cancel</button>
         <button type="submit" name="Save" value="Save">Save</button>
 
     </form>
+    <!-- Overrides the base pageCustomScripts block to include a script for initialising tinyMCE -->
+    {% block pageCustomScripts %}
+        <script>tinymce.init({ selector:'#pagecontent', plugins: 'image' });</script>
+    {% endblock pageCustomScripts %}
 
-    <script>tinymce.init({ selector:'#pagecontent', plugins: 'image' });</script>
 {% endblock content %}

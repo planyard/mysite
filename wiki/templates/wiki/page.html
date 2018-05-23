@@ -1,22 +1,27 @@
+<!-- Extends the base template -->
 {% extends 'wiki/base.html' %}
+<!-- Retrieve template tags for use later -->
 {% load wiki_tags %}
-
+<!-- Overrides the base title block with this page's title -->
 {% block title %}<title>{{ this_page.page_name }}</title>{% endblock title %}
-
+<!-- Overrides the base login block to add login/logout buttons -->
 {% block login %}
-
+    <!-- 'auth' determines if the user is authenticated; so, if the user is not, the 'login' nav is displayed -->
     {% if not auth %}
         <nav><a href="{% url 'wiki:login' %}" class="btn btn-primary m-2">Login</a></nav>
+    <!-- Else, if the user is authenticated, display the logout button -->
     {% else %}
         <nav><a href="{% url 'wiki:logout' %}" class="btn btn-danger m-2">Logout</a></nav>
     {% endif %}
 
 {% endblock login %}
-
+<!-- Overrides the base content block to display a given page's content -->
 {% block content %}
 
+    <!-- The 'wikify' tag filters any text (which is also a page name) surrounded by two square brackets as a hyperlink -->
+    <!-- The 'safe' tag allows users to enter HTML to be displayed on the web page -->
     {{ this_page.page_content|wikify|safe }}
-
+    <!-- Declares an 'edit page' button with a hyperlink reference to the current page's edit page -->
     <a class="btn btn-primary" href="{% url 'wiki:edit' pk=this_page.page_name %}">Edit Page</a>
 
 {% endblock content %}

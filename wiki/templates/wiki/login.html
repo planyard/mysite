@@ -1,22 +1,28 @@
+<!-- Extends the base template -->
 {% extends 'wiki/base.html' %}
-
+<!-- Overrides the base content block to include a login form -->
 {% block content %}
-
+    <!-- If the user enters their details incorrectly, notify them -->
     {% if form.errors %}
         <p>Your username and password didn't match. Please try again.</p>
     {% endif %}
-
+    <!-- If the page is going to redirect, -->
     {% if next %}
+        <!-- check if the user is authenticated, -->
         {% if user.is_authenticated %}
+            <!-- and notify them that their account does not have access to this page -->
             <p>Your account doesn't have access to this page. To proceed,
             please login with an account that has access.</p>
+        <!-- Else, prompt the user to log in. -->
         {% else %}
             <p>Please login to see this page.</p>
         {% endif %}
     {% endif %}
 
     <form method="post" action="{% url 'wiki:login' %}">
+        <!-- Required CSRF token for security purposes -->
         {% csrf_token %}
+        <!-- Table containing rows for username and password labels and entry fields -->
         <table>
         <tr>
             <td>{{ form.username.label_tag }}</td>
@@ -27,16 +33,14 @@
             <td>{{ form.password }}</td>
         </tr>
         </table>
-
+        <!-- Submit button for logging in -->
         <input type="submit" value="login" />
+        <!-- If the page is going to redirect, [] -->
         {% if next %}
             <input type="hidden" name="next" value="{{ next }}" />
         {% else %}
             <input type="hidden" name="next" value="{% url 'wiki:index' %}">
         {% endif %}
     </form>
-
-    {# Assumes you setup the password_reset view in your URLconf #}
-    {#<p><a href="{% url 'password_reset' %}">Lost password?</a></p>#}
 
 {% endblock content %}

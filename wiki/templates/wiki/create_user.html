@@ -1,26 +1,29 @@
+<!-- Extends the base template -->
 {% extends 'wiki/base.html' %}
-
+<!-- Overrides the base title block with the create user title -->
 {% block title %}<title>Create User</title>{% endblock title %}
-
+<!-- Overrides the base content block to display a registration form -->
 {% block content %}
-
+    <!-- If the user encounters an error with the form, notify them to try again -->
     {% if form.errors %}
         <p>There was an error on the form. Please try again.</p>
     {% endif %}
     <form class="form-registration" method="post" action="{% url 'wiki:register' %}">
+        <!-- Required CSRF token for security purposes -->
         {% csrf_token %}
-
+        <!-- Displays the form content -->
         {{ form }}
-
+        <!-- Submit button for user creation -->
         <button class="btn btn-danger" type="submit">Create User</button>
     </form>
 
 {% endblock content %}
-
+<!-- Overrides the base login block to add login/logout buttons -->
 {% block login %}
-
+    <!-- 'auth' determines if the user is authenticated; so, if the user is not, the 'login' nav is displayed -->
     {% if not auth %}
         <nav><a href="{% url 'wiki:login' %}" class="btn btn-primary m-2">Login</a></nav>
+    <!-- Else, if the user is authenticated, display the logout button -->
     {% else %}
         <nav><a href="{% url 'wiki:logout' %}" class="btn btn-danger m-2">Logout</a></nav>
     {% endif %}

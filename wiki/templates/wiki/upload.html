@@ -1,0 +1,28 @@
+{% extends 'wiki/base.html' %}
+
+{% block title %}<title>{{ this_page.page_name }}</title>{% endblock title %}
+
+{% block content %}
+
+    <section class="row justify-content-center">
+        {% if files %}
+            <ul class="m-3 list-group">
+            {% for file in files %}
+            <li class="list-group-item">
+                <a href="{{ file.content.url }}">{{ file.displayname }}</a>
+                <a class="btn btn-danger" href="{% url 'wiki:delete' file.pk %}">Delete</a>
+            </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No uploaded files.</p>
+        {% endif %}
+    </section>
+
+    <form method="POST" enctype="multipart/form-data" action="{% url 'wiki:upload' %}">
+        {% csrf_token %}
+        {{ form.content }}
+        <input class="btn btn-success" type="submit" value="Upload">
+    </form>
+
+{% endblock content %}

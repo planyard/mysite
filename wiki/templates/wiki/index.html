@@ -1,25 +1,34 @@
+<!-- Extends the base template -->
 {% extends 'wiki/base.html' %}
-
+<!-- Overrides the base title block with the index title -->
 {% block title %}<title>Index</title>{% endblock title %}
-
+<!-- Overrides the base login block to add login/logout buttons -->
 {% block login %}
-
+    <!-- 'auth' determines if the user is authenticated; so, if the user is not, the 'login' nav is displayed -->
     {% if not auth %}
         <nav><a href="{% url 'wiki:login' %}" class="btn btn-primary m-2">Login</a></nav>
+    <!-- Else, if the user is authenticated, display the logout button -->
     {% else %}
         <nav><a href="{% url 'wiki:logout' %}" class="btn btn-danger m-2">Logout</a></nav>
     {% endif %}
 
 {% endblock login %}
-
+<!-- Overrides the base content block to add an index of pages -->
 {% block content %}
-
+    <!-- If the context contains pages, -->
     {% if pages %}
+        <!-- iterate through each page in the context, -->
         {% for page in pages %}
-            <li class="list-group-item"><a href="{% url 'wiki:pageview' page.page_name %}">
-                {{ page.page_name }}</a></li>
+            <ul>
+                <!-- and display them in a list. -->
+                <li class="list-group-item">
+                    <a href="{% url 'wiki:pageview' page.page_name %}">
+                        {{ page.page_name }}
+                    </a>
+                </li>
+            </ul>
         {% endfor %}
-        </ul>
+    <!-- Else if no pages are in the context, notify the user that no pages are available -->
     {% else %}
         <p>No pages are available.</p>
     {% endif %}
