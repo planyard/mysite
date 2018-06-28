@@ -11,8 +11,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from os.path import split
 
-# Function-based view for page registration
 def register_page(request):
+    '''Function-based view for user registration'''
+
     # If the user got here via POST:
     if request.method == 'POST':
         # Create a variable containing a UserCreationForm with the content of the POST.
@@ -40,8 +41,9 @@ def register_page(request):
     # Then, render the 'create_user' template with the content of the form.
     return render(request, 'wiki/create_user.html', {'form': form})
 
-# Class-based view for logging in
+
 class WikiLoginView(auth_views.LoginView):
+    '''Class-based view for logging in'''
 
     # Modifies the 'get_context_data' method as follows:
     def get_context_data(self, **kwargs):
@@ -49,7 +51,7 @@ class WikiLoginView(auth_views.LoginView):
         context = super().get_context_data(**kwargs)
         # If the user is authenticated:
         if self.request.user.is_authenticated:
-            # Set the context to []:
+            # Set an 'auth' context to 'auth':
             context['auth'] = 'auth'
         # Then, return the context.
         return context
@@ -57,8 +59,10 @@ class WikiLoginView(auth_views.LoginView):
     # Points to the correct template
     template_name = 'wiki/login.html'
 
-# Class-based view for logging out
+
 class WikiLogoutView(auth_views.LogoutView):
+    '''Class-based view for logging out'''
+
     def get_next_page(self):
         return reverse('wiki:index')
 
@@ -68,8 +72,10 @@ class WikiLogoutView(auth_views.LogoutView):
             context['auth'] = 'auth'
         return context
 
-# Class-based view for the index
+
 class IndexView(generic.ListView):
+    '''Class-based view for the index'''
+
     # Points to the correct template
     template_name = 'wiki/index.html'
     # Defines a context object name for reference in the 'index' template
@@ -81,15 +87,19 @@ class IndexView(generic.ListView):
     def get_context_data(self, **kwargs):
         # Defines a variable containing all context data
         context = super().get_context_data(**kwargs)
+        # Defines a 'client' context with a request for displaying browser data
+        context['client'] = self.request.META['HTTP_USER_AGENT']
         # If the user is authenticated:
         if self.request.user.is_authenticated:
-            # Set the context to []:
+            # Set an 'auth' context to 'auth':
             context['auth'] = 'auth'
         # Then, return the context.
         return context
 
-# Class-based view for pages
+
 class PageView(generic.DetailView):
+    '''Class-based view for pages'''
+
     # Retrieves the correct model
     model = Page
     # Points to the correct template
@@ -102,7 +112,7 @@ class PageView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         # If the user is authenticated,
         if self.request.user.is_authenticated:
-            # set the context to []:
+            # set an 'auth' context to 'auth':
             context['auth'] = 'auth'
         # then, return the context.
         return context
@@ -111,6 +121,7 @@ class PageView(generic.DetailView):
         # Attempts to retrieve the given page's object. If the 'try' is unsuccessful, the page's object does not currently exist.
         try:
             self.object = self.get_object()
+            self.object.inchits()
         # If the Http404 exception is thrown, redirect to the edit page of the new page
         except Http404:
             return redirect('wiki:edit', pk=self.kwargs['pk'])
@@ -119,8 +130,10 @@ class PageView(generic.DetailView):
         # Then, this page's object is rendered into the page template
         return render(request, self.template_name, context)
 
-# Class-based view for editing pages
+
 class EditView(LoginRequiredMixin, generic.DetailView):
+    '''Class-based view for editing pages'''
+
     login_url = reverse_lazy('wiki:login')
     # Retrieves the correct model
     model = Page
@@ -175,6 +188,9 @@ class EditView(LoginRequiredMixin, generic.DetailView):
         return context
 
 def upload_file(request):
+    '''Function for file upload functionality. Determines if a request has been POSTed
+    and sends the provided data (i.e. the file) to the form.'''
+
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -190,5 +206,7 @@ def upload_file(request):
     return render(request, 'wiki/upload.html', context)
 
 def delete_file(request, pk):
+    '''Function that deletes files based on the primary key of the request.'''
+
     UserFile.objects.get(pk=pk).delete()
     return redirect('wiki:upload')

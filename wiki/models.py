@@ -7,6 +7,11 @@ from django.conf import settings
 class Page(models.Model):
     page_name = models.CharField(max_length=60, primary_key=True)
     page_content = models.TextField()
+    page_counter = models.IntegerField(default=1)
+
+    def inchits(self):
+        self.page_counter += 1
+        self.save()
 
     def __str__(self):
         return self.page_name

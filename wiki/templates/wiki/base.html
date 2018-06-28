@@ -20,16 +20,33 @@
         {% endblock title %}
     </head>
     <body>
-        <!-- Block for page login that is overridden in necessary inherting pages -->
-        {% block login %}
+        <nav class="navbar justify-content-between navbar-expand-lg navbar-light bg-light">
+            <div class="navbar-brand">
+                <a class="nav-item nav-link" href="{% url 'wiki:index' %}">Index</a>
+            </div>
+            <div>
+                {% block navItem %}
 
-        {% endblock login %}
+                {% endblock navItem %}
+            </div>
+            <div>
+                <!-- Block for page login that is overridden in necessary inheriting pages -->
+                {% block login %}
+
+                {% endblock login %}
+            </div>
+        </nav>
+
         <!-- Block for page content that is overridden in all inheriting pages -->
         {% block content %}
 
             Base text.
 
         {% endblock content %}
+        <!-- If client data is available, display a footer containing the user's browser information -->
+        {% if client %}
+            <footer class="footer">{{ client }}</footer>
+        {% endif %}
 
         <!-- Block for custom scripts that is overridden in necessary inheriting pages -->
         {% block pageCustomScripts %}

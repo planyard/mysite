@@ -6,12 +6,11 @@
 {% block login %}
     <!-- 'auth' determines if the user is authenticated; so, if the user is not, the 'login' nav is displayed -->
     {% if not auth %}
-        <nav><a href="{% url 'wiki:login' %}" class="btn btn-primary m-2">Login</a></nav>
+        <a href="{% url 'wiki:login' %}" class="btn btn-primary">Login</a>
     <!-- Else, if the user is authenticated, display the logout button -->
     {% else %}
-        <nav><a href="{% url 'wiki:logout' %}" class="btn btn-danger m-2">Logout</a></nav>
+        <a href="{% url 'wiki:logout' %}" class="btn btn-danger">Logout</a>
     {% endif %}
-
 {% endblock login %}
 <!-- Overrides the base content block to add an index of pages -->
 {% block content %}
@@ -19,14 +18,16 @@
     {% if pages %}
         <!-- iterate through each page in the context, -->
         {% for page in pages %}
+        <div class="container align-content-start">
             <ul>
                 <!-- and display them in a list. -->
-                <li class="list-group-item">
+                <li class="list-group-item col-2">
                     <a href="{% url 'wiki:pageview' page.page_name %}">
                         {{ page.page_name }}
                     </a>
                 </li>
             </ul>
+        </div>
         {% endfor %}
     <!-- Else if no pages are in the context, notify the user that no pages are available -->
     {% else %}

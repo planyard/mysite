@@ -1,5 +1,7 @@
 <!-- Extends the base template -->
 {% extends 'wiki/base.html' %}
+<!-- Overrides the base title block with the login title -->
+{% block title %}<title>Login</title>{% endblock title %}
 <!-- Overrides the base content block to include a login form -->
 {% block content %}
     <!-- If the user enters their details incorrectly, notify them -->
@@ -42,5 +44,10 @@
             <input type="hidden" name="next" value="{% url 'wiki:index' %}">
         {% endif %}
     </form>
+
+    <section>
+        <p>Don't have an account?</p>
+        <a href="{% url 'wiki:register' %}" class="btn btn-primary">Register</a>
+    </section>
 
 {% endblock content %}

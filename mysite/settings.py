@@ -121,7 +121,42 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'wiki/static')
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# Logging
+
+def filter_404_or_500(record):
+    if "404" in record or "500" in record:
+        return True
+    else:
+        return False
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+    'filter_404_or_500': {
+        '()': 'django.utils.log.CallbackFilter',
+        'callback': filter_404_or_500,
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'WARNING',
+            'filter': ['filter_404_or_500'],
+            'propagate': True,
+        },
+    },
+}
